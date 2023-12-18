@@ -84,14 +84,14 @@ def simple_scan(folder):
 def write_results_to_file(path): 
     file = open(f"{path}/result.txt", "w")
 
-    file.writelines([f'Images: {images_files}\n', 
-    f'Docx: {docx_files}\n', 
-    f'Archives: {archives}\n', 
-    f'Audio: {audio_files}\n', 
-    f'Video: {video_files}\n', 
-    f'Others: {other}\n', 
-    f'All extensions: {extensions}\n', 
-    f'Unknown extensions: {unknown_extensions}\n',])
+    file.writelines([f'Images: \n{images_files}\n', 
+    f'\nDocx: \n{docx_files}\n', 
+    f'\nArchives: \n{archives}\n', 
+    f'\nAudio: \n{audio_files}\n', 
+    f'\nVideo: \n{video_files}\n', 
+    f'\nOthers: \n{other}\n', 
+    f'\nAll extensions: {extensions}\n', 
+    f'\nUnknown extensions: {unknown_extensions}\n',])
 
     file.close()
 
