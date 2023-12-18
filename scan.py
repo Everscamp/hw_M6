@@ -14,7 +14,7 @@ extensions = set()
 known_extensions = {
     ('JPEG', 'PNG', 'JPG', 'SVG') : images_files,
     ('DOC', 'DOCX', 'TXT', 'PDF', 'XLSX', 'PPTX', 'RTF'): docx_files,
-    ('ZIP', 'GZ', 'TAR'): archives,
+    ('ZIP', 'GZ', 'TAR', 'WIN'): archives,
     ('MP3', 'OGG', 'WAV', 'AMR') : audio_files,
     ('AVI', 'MP4', 'MOV', 'MKV', 'WEBM') : video_files
 }
@@ -48,7 +48,7 @@ def scan(folder):
             other.append(new_name)
         else:
             for key in known_extensions:
-                try: #not sure if try-except actualy needed here actualy 
+                try: #not sure if try-except actualy needed here 
                     if extension in key:
                         container = known_extensions[key]
                         extensions.add(extension)
@@ -57,11 +57,34 @@ def scan(folder):
                     unknown_extensions.add(extension)
                     other.append(new_name)
 
+#scans all folders, needed to create a result.txt after sorting
+def simple_scan(folder):
+    for item in folder.iterdir():
+        if item.is_dir():
+            folders.append(item)
+            simple_scan(item)
+
+        extension = get_extensions(file_name=item.name)
+        new_name = folder/item.name
+
+        if extension not in all_extentions() and not item.is_dir():
+            if extension:
+                unknown_extensions.add(extension)
+                other.append(new_name)
+            if not extension:
+                unknown_extensions.add('unknown')
+        else:
+            for key in known_extensions:
+                if extension in key:
+                    container = known_extensions[key]
+                    extensions.add(extension)
+                    container.append(new_name)
+
+#creates reault.txt after simple_scan
 def write_results_to_file(path): 
     file = open(f"{path}/result.txt", "w")
 
-    file.writelines([f'Folders: {folders}\n', 
-    f'Images: {images_files}\n', 
+    file.writelines([f'Images: {images_files}\n', 
     f'Docx: {docx_files}\n', 
     f'Archives: {archives}\n', 
     f'Audio: {audio_files}\n', 

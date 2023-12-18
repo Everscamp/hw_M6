@@ -13,7 +13,8 @@ def handle_archive(path, root_folder, dist):
     target_folder = root_folder / dist
     target_folder.mkdir(exist_ok=True)
 
-    new_name = normalize.normalize(path.name.replace("f{Path(file_name).suffix}", ''))
+    suffix = Path(path.name).suffix
+    new_name = normalize.normalize(path.name).replace(suffix, '')
 
     archive_folder = target_folder / new_name
     archive_folder.mkdir(exist_ok=True)
@@ -60,9 +61,12 @@ def main(folder_path):
     for file in scan.archives:
         handle_archive(file, folder_path, "archives")
 
-    scan.write_results_to_file(folder_path) #creates txt file with all files and extentions
-
     remove_empty_folders(folder_path)
+
+#aftersorting scan
+    scan.simple_scan(folder_path) 
+#creates txt file with all files and extentions
+    scan.write_results_to_file(folder_path) 
 
     
 if __name__ == '__main__':
@@ -72,12 +76,12 @@ if __name__ == '__main__':
     folder = Path(path)
     main(folder.resolve())
 
-    print(f"Folder: {len(scan.folders)}")
+#not really needed here becouse of created result.txt
     print(f"Images: {len(scan.images_files)}")
     print(f"Docx: {len(scan.docx_files)}")
-    print(f"Archives: {scan.archives}")
-    print(f"Audio: {scan.audio_files}")
-    print(f"Video: {scan.video_files}")
-    print(f"Others: {scan.other}")
-    print(f"All extensions: {scan.extensions}")
+    print(f"Audio: {len(scan.audio_files)}")
+    print(f"Video: {len(scan.video_files)}")
+    print(f"Others: {len(scan.other)}")
+    print(f"All known extensions: {scan.extensions}")
     print(f"Unknown extensions: {scan.unknown_extensions}")
+    print(f'For a more detailed report, look at this file {path}/result.txt')
